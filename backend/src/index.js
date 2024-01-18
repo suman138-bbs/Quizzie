@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import app from "./app.js";
+import { app } from "./app.js";
 import config from "./config/index.js";
 
 (async () => {
@@ -16,7 +16,7 @@ import config from "./config/index.js";
       console.log(`Listening on ${config.PORT}`);
     };
 
-    app.listen(config, onListening);
+    app.listen(config.PORT, onListening);
   } catch (err) {
     console.error("ERROR: ", err);
     throw err;

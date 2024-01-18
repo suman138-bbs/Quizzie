@@ -6,7 +6,7 @@ import SignUp from "../../components/auth/sign-up";
 import Login from "../../components/auth/login";
 
 const Layout = () => {
-  const [selected, setSelected] = useState("signup");
+  const [selected, setSelected] = useState("login");
   const handleButtonClick = (buttonType) => {
     setSelected(buttonType);
   };
@@ -17,8 +17,18 @@ const Layout = () => {
         <h1>QUIZZIE</h1>
         <div className={style.formContainer}>
           <div className={style.buttonContainer}>
-            <button onClick={() => handleButtonClick("signup")}>Sign Up</button>
-            <button onClick={() => handleButtonClick("login")}>Log In</button>
+            <button
+              onClick={() => handleButtonClick("signup")}
+              className={selected === "signup" ? style.selectedButton : ""}
+            >
+              Sign Up
+            </button>
+            <button
+              onClick={() => handleButtonClick("login")}
+              className={selected === "login" ? style.selectedButton : ""}
+            >
+              Log In
+            </button>
           </div>
           <div>
             {selected === "signup" && <SignUp />}
