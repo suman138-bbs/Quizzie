@@ -1,15 +1,16 @@
+import config from "../config/index.js";
 import User from "../models/user.model.js";
 import asyncHandler from "../services/asyncHandler.js";
 import CustomError from "../utils/CustomError.js";
-
+import JWT from "jsonwebtoken";
 export const cookieOptions = {
-  expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+  expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
   httpOnly: true,
 };
 
 export const signUp = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-
+  console.log("EMAIL", email);
   if (!name || !email || !password) {
     return res
       .status(400)
@@ -30,14 +31,19 @@ export const signUp = asyncHandler(async (req, res) => {
     password,
   });
 
-  const token = user.getJwtToken();
+  const accessToken = user?.getJwtAccessToken();
+  const refreshToken = user?.getJwtRefreshToken();
   user.password = undefined;
-
-  res.cookie("token", token, cookieOptions);
+  console.log("ACCESS TokenExpiredError", accessToken);
+  res.cookie("refresh_token", refreshToken, {
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+  });
+  res.cookie("access_token", accessToken, cookieOptions);
 
   res.status(200).json({
     success: true,
-    token,
+    accessToken,
     user,
   });
 });
@@ -50,23 +56,42 @@ export const login = asyncHandler(async (req, res) => {
   }
   const user = await User.findOne({ email }).select("+password");
 
-  if (!user) {
+  if (!user || !user.comparePassword(password)) {
     throw new CustomError("Invalid credentials", 400);
   }
 
-  const isPasswordMatched = await user.comparePassword(password);
-  if (isPasswordMatched) {
-    const token = user.getJwtToken();
-    user.password = undefined;
-    res.cookie("token", token, cookieOptions);
-    return res.status(200).json({
-      success: true,
-      token,
-      user,
-    });
-  }
+  const accessToken = user.getJwtAccessToken();
+  const refreshToken = user.getJwtRefreshToken();
 
-  throw new CustomError("Password is incorrect", 400);
+  res.cookie("refresh_token", refreshToken, {
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+  });
+
+  res.cookie("access_token", accessToken, cookieOptions);
+  res.status(200).json({ user, accessToken });
+});
+
+/**Refresh Token */
+export const refresh = asyncHandler(async (req, res) => {
+  const refresh_token = req.cookies.refresh_token;
+  const decoded = JWT.verify(refresh_token, config.REFRESH_TOKEN);
+  if (!decoded) {
+    res.status(400).json({ success: false, message: "Couldn't refreshToken" });
+  }
+  const id = decoded._id;
+  const user = await User.findById(id);
+  if (!user) {
+    throw new CustomError("Couldn't referesh token", 400);
+  }
+  const accessToken = user.getJwtAcessToken();
+  const refreshToken = user.getJwtRefreshToken();
+  res.cookie("refresh_token", refreshToken, {
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+  });
+  res.cookie("access_token", accessToken, cookieOptions);
+  res.status(200).json({ user, accessToken });
 });
 
 export const logout = asyncHandler(async (req, res) => {

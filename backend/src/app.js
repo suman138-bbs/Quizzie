@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.route.js";
+import quesAnsRouter from "./routes/questionAnswer.route.js";
 
 export const app = express();
 
@@ -12,6 +13,7 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(cookieParser());
 
 app.use("/auth", userRouter);
+app.use("/app", quesAnsRouter);
 
 app.all("*", (req, res) => {
   return res.status(404).json({

@@ -12,7 +12,7 @@ const questionAnswerSchema = new mongoose.Schema({
   },
   impression: {
     type: Number,
-    required: true,
+    default: 0,
   },
   questionsAnswer: [
     {

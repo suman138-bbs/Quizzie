@@ -1,6 +1,12 @@
-import asyncHandler from "../services/asyncHandler.js";
-import CustomError from "../utils/CustomError";
+import { Router } from "express";
+import {
+  createQuestionAnswer,
+  getAllQuestionAnswer,
+} from "../controllers/questionAnswer.controller.js";
+import { isLoggedIn } from "../middleware/auth.middleware.js";
+const quesAnsRouter = Router();
 
-const createQuesAns = asyncHandler(async (req, res) => {
-  const { name, createdDate } = req.body;
-});
+quesAnsRouter.post("/craeteQNA", isLoggedIn, createQuestionAnswer);
+quesAnsRouter.get("/getAllQNA", isLoggedIn, getAllQuestionAnswer);
+
+export default quesAnsRouter;

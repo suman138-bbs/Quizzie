@@ -39,9 +39,14 @@ userSchema.methods = {
     return await bcrypt.compare(enteredPassword, this.password);
   },
 
-  getJwtToken: function () {
-    return JWT.sign({ _id: this._id }, config.JWT_SECRET, {
-      expiresIn: config.JWT_EXPIRY,
+  getJwtAccessToken: function () {
+    return JWT.sign({ _id: this._id }, config.ACCESS_TOKEN, {
+      expiresIn: config.ACCESS_TOKEN_EXPIRY,
+    });
+  },
+  getJwtRefreshToken: function () {
+    return JWT.sign({ _id: this._id }, config.REFRESH_TOKEN, {
+      expiresIn: config.REF_TOKEN_EXPIRY,
     });
   },
 };
