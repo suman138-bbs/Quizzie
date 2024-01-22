@@ -1,8 +1,13 @@
 import { useState } from "react";
-import axios from "axios";
+import axios from "../../../api/axios";
 import style from "./style.module.css";
+import useAuth from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = () => {
+  const { auth, setAuth } = useAuth();
+  const navigate = useNavigate();
   const [errors, setErrors] = useState(null);
   const [data, setData] = useState({
     email: "",
@@ -15,24 +20,22 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log("DATA", data);
     if (!data.email && !data.password) {
       setErrors("Please provide email and password");
       return;
     } else if (!isValidEmail(data.email)) {
       setErrors("Please provide a valid email address");
       return;
-    } else if (data.password.length < 8) {
-      setErrors("Password must be at least 8 characters long");
-      return;
     }
     try {
-      const res = await axios.post("http://localhost:8080/auth/login", data, {
-        withCredentials: true,
-      });
-      console.log("Response", res);
+      const res = await axios.post("/auth/login", data);
+      if (res?.data) {
+        setAuth(res.data);
+        navigate("/app/dashboard");
+      }
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data.message || "Invalid User");
     }
   };
 
