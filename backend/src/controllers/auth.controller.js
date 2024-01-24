@@ -4,7 +4,7 @@ import asyncHandler from "../services/asyncHandler.js";
 import CustomError from "../utils/CustomError.js";
 import JWT from "jsonwebtoken";
 export const cookieOptions = {
-  expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+  expires: new Date(Date.now() + 30 * 60 * 1000),
   httpOnly: true,
 };
 
@@ -36,7 +36,7 @@ export const signUp = asyncHandler(async (req, res) => {
   user.password = undefined;
   console.log("ACCESS TokenExpiredError", accessToken);
   res.cookie("refresh_token", refreshToken, {
-    expires: new Date(Date.now() + 60 * 1000),
+    expires: new Date(Date.now() + 60 * 60 * 1000),
     httpOnly: true,
   });
   res.cookie("access_token", accessToken, cookieOptions);
@@ -64,7 +64,7 @@ export const login = asyncHandler(async (req, res) => {
   const refreshToken = user.getJwtRefreshToken();
 
   res.cookie("refresh_token", refreshToken, {
-    expires: new Date(Date.now() + 60 * 1000),
+    expires: new Date(Date.now() + 60 * 60 * 1000),
     httpOnly: true,
   });
 
@@ -92,7 +92,11 @@ export const refresh = asyncHandler(async (req, res) => {
 });
 
 export const logout = asyncHandler(async (req, res) => {
-  res.cookie("token", null, {
+  res.cookie("refresh_token", null, {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+  res.cookie("access_token", null, {
     expires: new Date(Date.now()),
     httpOnly: true,
   });

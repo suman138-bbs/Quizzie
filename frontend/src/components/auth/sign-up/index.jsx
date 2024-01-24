@@ -83,7 +83,7 @@ const SignUp = () => {
       <div className={style.errorsContainer}>
         {errors && <span>{errors}</span>}
         <button type="submit" onClick={handleSubmit}>
-          Login
+          Signup
         </button>
       </div>
     </form>

@@ -15,6 +15,8 @@ function App() {
 
   useEffect(() => {
     const handleAuth = async () => {
+      const currentRoute = window.location.pathname;
+
       console.log("Auth", auth);
       if (!auth.name) {
         const path = pathname.split("/").includes("auth");
@@ -27,7 +29,11 @@ function App() {
           navigate("auth");
           return;
         }
-        navigate("/app/dashboard");
+        if (currentRoute.startsWith("/app")) {
+          navigate(currentRoute);
+        } else {
+          navigate("/app/dashboard");
+        }
       } else {
         navigate("/auth");
       }

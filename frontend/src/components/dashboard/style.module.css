@@ -1,0 +1,50 @@
+.quizAndtred{
+    height: 100%;
+    display: flex;
+    
+    flex-direction:column ;
+    align-items: center;
+    justify-content: center;
+}
+.total{
+    display: flex;
+    gap: 3rem;
+}
+
+.total>div:nth-child(1){
+    color: #FF5D01;
+
+}
+.total>div:nth-child(2) {
+    color: #60B84B;
+}
+.total>div:nth-child(3) {
+    color: #5076FF;
+}
+
+
+.total > div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  
+  background-color: #fff;
+  border-radius: 1rem;
+  width: 10rem;
+  height: 9rem;
+  padding: 0.1rem 3rem;
+}
+
+
+
+.total >div>div{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: -3rem;
+}
+.total>div>div>h1{
+    font-size: 3rem;
+    padding: 0px;
+}

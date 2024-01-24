@@ -33,6 +33,9 @@ const Login = () => {
       if (res?.data) {
         setAuth(res.data);
         navigate("/app/dashboard");
+        if (auth?.user) {
+          toast.success("User Logged In Successfully");
+        }
       }
     } catch (error) {
       toast.error(error.response.data.message || "Invalid User");
@@ -48,6 +51,7 @@ const Login = () => {
         </div>
         <div className={style.inputContainer}>
           <input
+            autoComplete="on"
             type="email"
             onChange={(e) => {
               setData({ ...data, email: e.target.value });
