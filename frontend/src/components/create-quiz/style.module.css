@@ -17,6 +17,7 @@
   background-color: #fff;
   border-radius: 1rem;
   padding: 2rem;
+  width: 40rem;
 }
 
 .quizInput input {
@@ -39,7 +40,7 @@
 
 .createQuizContainer > div > div:nth-child(2) {
   display: flex;
-  justify-content: space-between;
+  gap: 5rem;
   align-items: center;
 }
 

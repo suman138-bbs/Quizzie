@@ -13,7 +13,7 @@ const CreateQuiz = () => {
 
   const handleCancel = () => {
     navigate(-2);
-    /**It may change in future */
+    /**I may change in future */
   };
 
   const handleQuizType = (type) => {
