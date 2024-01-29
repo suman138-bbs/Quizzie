@@ -7,8 +7,8 @@ import CustomError from "../utils/CustomError.js";
 import asyncHandler from "../services/asyncHandler.js";
 
 export const isLoggedIn = asyncHandler(async (req, res, next) => {
-  const token = req.cookies.access_token || req.body.accessToken;
-
+  const token = req.cookies.refresh_token || req.body.accessToken;
+  console.log(token);
   if (!token) {
     return res.status(400).json({
       success: true,
@@ -17,7 +17,7 @@ export const isLoggedIn = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    const decodedJwtPayload = JWT.verify(token, config.ACCESS_TOKEN);
+    const decodedJwtPayload = JWT.verify(token, config.REFRESH_TOKEN);
     const user = await User.findById(decodedJwtPayload._id, "name email");
     if (!user) {
       return res.status(400).json({

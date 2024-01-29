@@ -6,6 +6,7 @@ import PrivateLayout from "./layout/private";
 
 import useAuth from "./hooks/useAuth";
 import useRefToken from "./hooks/useRefToken";
+import LiveQuiz from "./layout/live-quiz";
 
 function App() {
   const { auth } = useAuth();
@@ -20,6 +21,13 @@ function App() {
       console.log("Auth", auth);
       if (!auth.name) {
         const path = pathname.split("/").includes("auth");
+
+        if (currentRoute.startsWith("/live-quiz")) {
+          // Accept only routes starting with "/live-quiz"
+          navigate(currentRoute);
+          return;
+        }
+
         if (path) {
           navigate("/auth");
           return;
@@ -48,6 +56,10 @@ function App() {
     {
       path: "/app/*",
       element: <PrivateLayout />,
+    },
+    {
+      path: "/live-quiz/:quizId",
+      element: <LiveQuiz />,
     },
   ]);
 

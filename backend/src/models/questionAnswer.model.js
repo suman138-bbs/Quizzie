@@ -22,6 +22,11 @@ const questionAnswerSchema = new mongoose.Schema({
       },
       options: [
         {
+          type: {
+            type: String,
+            required: true,
+            enum: ["text", "image", "txtAndImg"],
+          },
           option: {
             type: String,
             required: true,
@@ -30,6 +35,9 @@ const questionAnswerSchema = new mongoose.Schema({
           isCorrect: {
             type: Boolean,
             required: true,
+          },
+          imageUrl: {
+            type: String,
           },
         },
       ],
@@ -44,6 +52,9 @@ const questionAnswerSchema = new mongoose.Schema({
       incorrectAttempted: {
         type: Number,
         default: 0,
+      },
+      time: {
+        type: Number,
       },
     },
   ],

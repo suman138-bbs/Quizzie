@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.route.js";
+import liveQuizRouter from "./routes/liveQuiz.route.js";
 import quesAnsRouter from "./routes/questionAnswer.route.js";
 
 export const app = express();
@@ -14,6 +15,7 @@ app.use(cookieParser());
 
 app.use("/auth", userRouter);
 app.use("/app", quesAnsRouter);
+app.use("/live-quiz", liveQuizRouter);
 
 app.all("*", (req, res) => {
   return res.status(404).json({

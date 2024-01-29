@@ -63,7 +63,9 @@ const CreateQuiz = () => {
           </div>
         </div>
       )}
-      {step === 2 && <div>{quizType === "Q&A" && <QuestionAnsForm />}</div>}
+      {step === 2 && (
+        <div>{quizType === "Q&A" && <QuestionAnsForm name={quizName} />}</div>
+      )}
     </div>
   );
 };
