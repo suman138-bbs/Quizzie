@@ -12,7 +12,7 @@ const pollSchema = new mongoose.Schema({
   },
   impression: {
     type: Number,
-    required: true,
+    default: 0,
   },
 
   polls: [
@@ -23,13 +23,21 @@ const pollSchema = new mongoose.Schema({
       },
       options: [
         {
-          name: {
+          type: {
+            type: String,
+            required: true,
+            enum: ["text", "image", "txtAndImg"],
+          },
+          option: {
             type: String,
             required: true,
           },
           selected: {
             type: Number,
             default: 0,
+          },
+          imageUrl: {
+            type: String,
           },
         },
       ],

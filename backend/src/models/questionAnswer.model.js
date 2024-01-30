@@ -29,7 +29,6 @@ const questionAnswerSchema = new mongoose.Schema({
           },
           option: {
             type: String,
-            required: true,
           },
 
           isCorrect: {
