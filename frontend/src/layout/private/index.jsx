@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useNavigate, useRoutes } from "react-router-dom";
 import { Suspense } from "react";
+import { SyncLoader } from "react-spinners";
 
 import Dashboard from "../../components/dashboard";
 import Analytics from "../../components/analytics";
@@ -86,7 +87,7 @@ const PrivateLayout = () => {
     },
   ]);
 
-  return <Suspense fallback={"Loading...."}>{routing}</Suspense>;
+  return <Suspense fallback={<SyncLoader />}>{routing}</Suspense>;
 };
 
 export default PrivateLayout;

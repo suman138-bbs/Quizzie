@@ -37,5 +37,9 @@ export const deletePoll = asyncHandler(async (req, res) => {
   console.log(pollId);
   await Poll.findByIdAndDelete(pollId);
 
+  await User.findByIdAndUpdate(req.user._id, {
+    $pull: { polls: { poll_id: pollId } },
+  });
+
   res.status(200).json({ success: true, message: "Quiz Deleted Succesfully" });
 });

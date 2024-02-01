@@ -21,10 +21,11 @@
 }
 
 .quizInput input {
-  width: 25rem;
+  width: 31rem;
   box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.15);
   border: none;
-  padding: 1.3em 1em;
+  padding: 1em 1em;
+  border-radius: 0.8rem;
 }
 
 .quizInput input::placeholder {
@@ -52,7 +53,7 @@
   box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.15);
   background-color: #fff;
   cursor: pointer;
-  border-radius: 0.2em;
+  border-radius: 0.5em;
 }
 .createQuizContainer > div > div:nth-child(3) {
   display: flex;
@@ -85,4 +86,8 @@
 .createQuizContainer > div > div:nth-child(2) > button.selected {
   background-color: #60b84b;
   color: #fff;
+}
+
+.selectedOption {
+  background-color: aqua;
 }

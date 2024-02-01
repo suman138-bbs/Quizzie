@@ -1,5 +1,6 @@
 import { Suspense, useState } from "react";
 import { useRoutes } from "react-router-dom";
+import { SyncLoader } from "react-spinners";
 
 import style from "./style.module.css";
 import SignUp from "../../components/auth/sign-up";
@@ -47,7 +48,7 @@ const AuthLayout = () => {
       element: <Layout />,
     },
   ]);
-  return <Suspense fallback={"Loading...."}>{routing}</Suspense>;
+  return <Suspense fallback={<SyncLoader />}>{routing}</Suspense>;
 };
 
 export default AuthLayout;

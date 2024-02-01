@@ -7,6 +7,7 @@ import PrivateLayout from "./layout/private";
 import useAuth from "./hooks/useAuth";
 import useRefToken from "./hooks/useRefToken";
 import LiveQuiz from "./layout/live-quiz";
+import LivePoll from "./layout/live-poll";
 
 function App() {
   const { auth } = useAuth();
@@ -23,7 +24,10 @@ function App() {
         const path = pathname.split("/").includes("auth");
 
         if (currentRoute.startsWith("/live-quiz")) {
-          // Accept only routes starting with "/live-quiz"
+          navigate(currentRoute);
+          return;
+        }
+        if (currentRoute.startsWith("/live-poll")) {
           navigate(currentRoute);
           return;
         }
@@ -47,7 +51,7 @@ function App() {
       }
     };
     handleAuth();
-  }, [navigate]);
+  }, []);
   const routing = useRoutes([
     {
       path: "/auth/*",
@@ -60,6 +64,10 @@ function App() {
     {
       path: "/live-quiz/:quizId",
       element: <LiveQuiz />,
+    },
+    {
+      path: "/live-poll/:pollId",
+      element: <LivePoll />,
     },
   ]);
 

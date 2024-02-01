@@ -7,18 +7,17 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../../api/axios";
 import { toast } from "react-toastify";
 
-const QuestionAnsForm = ({ name }) => {
+const PollForm = ({ name }) => {
   const navigate = useNavigate();
   const [quizSuccess, setQuizSuccess] = useState({});
   const urlRef = useRef(null);
   const [quizForms, setQuizForms] = useState([
     {
-      questionText: "",
+      pollText: "",
       options: [
-        { type: "", option: "", isCorrect: false, imageUrl: "" },
-        { type: "", option: "", isCorrect: false, imageUrl: "" },
+        { type: "", option: "", imageUrl: "" },
+        { type: "", option: "", imageUrl: "" },
       ],
-      time: 0,
     },
   ]);
 
@@ -30,12 +29,11 @@ const QuestionAnsForm = ({ name }) => {
       setQuizForms((prevForms) => [
         ...prevForms,
         {
-          questionText: "",
+          pollText: "",
           options: [
-            { type: "", option: "", isCorrect: false, imageUrl: "" },
-            { type: "", option: "", isCorrect: false, imageUrl: "" },
+            { type: "", option: "", imageUrl: "" },
+            { type: "", option: "", imageUrl: "" },
           ],
-          time: 0,
         },
       ]);
       setActiveFormIndex(activeFormIndex + 1);
@@ -49,7 +47,7 @@ const QuestionAnsForm = ({ name }) => {
   const handleQueInputChange = (index, value) => {
     setQuizForms((prevForms) => {
       const updatedForms = [...prevForms];
-      updatedForms[index].questionText = value;
+      updatedForms[index].pollText = value;
       console.log("PRE", prevForms);
       return updatedForms;
     });
@@ -77,7 +75,7 @@ const QuestionAnsForm = ({ name }) => {
       if (prev[activeFormIndex].options.length < 5) {
         const updatedOptions = [
           ...prev[activeFormIndex].options,
-          { type: "", option: "", isCorrect: false, imageUrl: "" },
+          { type: "", option: "", imageUrl: "" },
         ];
 
         const updatedForms = [...prev];
@@ -104,25 +102,6 @@ const QuestionAnsForm = ({ name }) => {
         }
         return form;
       });
-      return updatedForms;
-    });
-  };
-
-  const handleCorrectOption = (index) => {
-    setQuizForms((prev) => {
-      const updatedForms = [...prev];
-      const updatedOptions = updatedForms[activeFormIndex].options.map(
-        (option, i) => ({
-          ...option,
-          isCorrect: i === index,
-        })
-      );
-
-      updatedForms[activeFormIndex] = {
-        ...updatedForms[activeFormIndex],
-        options: updatedOptions,
-      };
-
       return updatedForms;
     });
   };
@@ -179,32 +158,15 @@ const QuestionAnsForm = ({ name }) => {
     navigate("/app/dashboard");
   };
 
-  const handleTimer = (time) => {
-    setQuizForms((prevForms) => {
-      const updatedForms = [...prevForms];
-      updatedForms[activeFormIndex].time = time;
-
-      return updatedForms;
-    });
-  };
-
   const handleCreateQuiz = async () => {
-    if (!quizForms[activeFormIndex].questionText.trim()) {
+    if (!quizForms[activeFormIndex].pollText.trim()) {
       toast.error("Question name cannot be empty");
       return;
     }
 
-    const isOptionSelected = quizForms[activeFormIndex].options.some(
-      (option) => option.isCorrect
-    );
-    if (!isOptionSelected) {
-      toast.error("Select at least one correct option");
-      return;
-    }
-
+    // Check based on quizType
     const currentOptions = quizForms[activeFormIndex].options;
 
-    // Check based on quizType
     if (quizType === "Text") {
       const isEmptyOptionText = currentOptions.some(
         (option) => option.option.trim() === ""
@@ -244,14 +206,14 @@ const QuestionAnsForm = ({ name }) => {
 
     try {
       const res = await axios.post(
-        "/app/craeteQNA",
+        "/poll/createPoll",
         { name, quizForms },
         { withCredentials: true }
       );
-      console.log("rs", res);
+
       if (res.data?.success) {
         setQuizSuccess({ success: res.data?.success, id: res?.data?.id });
-        toast.success("Quiz Created Successfully");
+        toast.success("Poll Created Successfully");
       }
     } catch (error) {
       toast.error(error.response.message);
@@ -280,7 +242,7 @@ const QuestionAnsForm = ({ name }) => {
         <h3>Congrats your Quiz is Published!</h3>
         <input
           type="text"
-          value={`http://localhost:5173/live-quiz/${quizSuccess.id}`}
+          value={`http://localhost:5173/live-poll/${quizSuccess.id}`}
           ref={urlRef}
         />
         <div>
@@ -383,14 +345,6 @@ const QuestionAnsForm = ({ name }) => {
                               <div className={style.optionContainer}>
                                 <div>
                                   <input
-                                    type="radio"
-                                    onChange={() => {
-                                      handleCorrectOption(index);
-                                    }}
-                                    checked={option.isCorrect}
-                                    name="option"
-                                  />
-                                  <input
                                     type="text"
                                     className={
                                       option.isCorrect
@@ -434,12 +388,18 @@ const QuestionAnsForm = ({ name }) => {
                                 {index ===
                                   quizForms[activeFormIndex].options.length -
                                     1 && (
-                                  <button
-                                    className={style.cancelBtn}
-                                    onClick={handleCancel}
-                                  >
-                                    Cancel
-                                  </button>
+                                  <div className={style.addDelBtn}>
+                                    <button
+                                      className={style.cancelBtn}
+                                      onClick={handleCancel}
+                                    >
+                                      Cancel
+                                    </button>
+
+                                    <button onClick={handleCreateQuiz}>
+                                      Create Quiz
+                                    </button>
+                                  </div>
                                 )}
                               </div>
                             </div>
@@ -456,14 +416,6 @@ const QuestionAnsForm = ({ name }) => {
                             <div key={index}>
                               <div className={style.optionContainer}>
                                 <div>
-                                  <input
-                                    type="radio"
-                                    onChange={() => {
-                                      handleCorrectOption(index);
-                                    }}
-                                    checked={option.isCorrect}
-                                    name="option"
-                                  />
                                   <input
                                     type="text"
                                     className={
@@ -509,12 +461,18 @@ const QuestionAnsForm = ({ name }) => {
                                   index ===
                                     quizForms[activeFormIndex].options.length -
                                       1 && (
-                                    <button
-                                      className={style.cancelBtn}
-                                      onClick={handleCancel}
-                                    >
-                                      Cancel
-                                    </button>
+                                    <div className={style.addDelBtn}>
+                                      <button
+                                        className={style.cancelBtn}
+                                        onClick={handleCancel}
+                                      >
+                                        Cancel
+                                      </button>
+
+                                      <button onClick={handleCreateQuiz}>
+                                        Create Quiz
+                                      </button>
+                                    </div>
                                   )}
                               </div>
                             </div>
@@ -531,14 +489,6 @@ const QuestionAnsForm = ({ name }) => {
                             <div key={index}>
                               <div className={style.optionContainer}>
                                 <div>
-                                  <input
-                                    type="radio"
-                                    onChange={() => {
-                                      handleCorrectOption(index);
-                                    }}
-                                    checked={option.isCorrect}
-                                    name="option"
-                                  />
                                   <input
                                     type="text"
                                     className={
@@ -593,12 +543,18 @@ const QuestionAnsForm = ({ name }) => {
                                   index ===
                                     quizForms[activeFormIndex].options.length -
                                       1 && (
-                                    <button
-                                      className={style.cancelBtn}
-                                      onClick={handleCancel}
-                                    >
-                                      Cancel
-                                    </button>
+                                    <div className={style.addDelBtn}>
+                                      <button
+                                        className={style.cancelBtn}
+                                        onClick={handleCancel}
+                                      >
+                                        Cancel
+                                      </button>
+
+                                      <button onClick={handleCreateQuiz}>
+                                        Create Quiz
+                                      </button>
+                                    </div>
                                   )}
                               </div>
                             </div>
@@ -607,31 +563,6 @@ const QuestionAnsForm = ({ name }) => {
                       )}
                     </div>
                   )}
-
-                  <div className={style.timerContainer}>
-                    <div>
-                      <h4>Timer</h4>
-
-                      {[0, 5, 10].map((time) => (
-                        <button
-                          key={time}
-                          className={
-                            quizForms[activeFormIndex].time === time
-                              ? style.timerBtn
-                              : ""
-                          }
-                          onClick={() => {
-                            handleTimer(time);
-                          }}
-                        >
-                          {time ? `${time} Sec` : "OFF"}
-                        </button>
-                      ))}
-                    </div>
-                    <div>
-                      <button onClick={handleCreateQuiz}>Create Quiz</button>
-                    </div>
-                  </div>
                 </div>
               </div>
             )
@@ -642,4 +573,4 @@ const QuestionAnsForm = ({ name }) => {
   );
 };
 
-export default QuestionAnsForm;
+export default PollForm;

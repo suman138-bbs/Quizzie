@@ -93,7 +93,6 @@
 }
 
 .optionContainer > div {
-  margin-left: -1rem;
   display: flex;
   gap: 1rem;
   align-items: center;
@@ -127,7 +126,6 @@
 }
 
 .addBtn {
-  margin-left: 1rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -219,6 +217,26 @@
   font-size: 1.7rem;
   cursor: pointer;
 }
+
+.addDelBtn {
+  display: flex;
+  gap: 17rem;
+}
+
+.addDelBtn > button:first-child {
+  padding: 0.4rem 3rem;
+  border-radius: 0.5rem;
+}
+
+.addDelBtn > button:last-child {
+  background-color: #60b84b;
+  border: none;
+  padding: 0.4rem 3rem;
+  border-radius: 0.5rem;
+  color: #fff;
+  cursor: pointer;
+}
+
 /* 
 .quesNumberContainer > button {
 

@@ -8,6 +8,11 @@
   color: #474444;
 }
 
+.optionContainer > div > button {
+  display: flex;
+  align-items: center;
+}
+
 .timerAndNum {
   display: flex;
   justify-content: space-between;
@@ -38,11 +43,6 @@
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
-}
-
-.optionContainer > div > button {
-  display: flex;
-  align-items: center;
 }
 
 .optionBtn {

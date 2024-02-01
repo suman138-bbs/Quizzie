@@ -2,7 +2,9 @@ import { useNavigate } from "react-router-dom";
 import style from "./style.module.css";
 import { useState } from "react";
 import { toast } from "react-toastify";
+
 import QuestionAnsForm from "../../common/components/question-Answer-form";
+import PollForm from "../../common/components/poll-form";
 
 const CreateQuiz = () => {
   const [step, setStep] = useState(1);
@@ -12,7 +14,7 @@ const CreateQuiz = () => {
   const navigate = useNavigate();
 
   const handleCancel = () => {
-    navigate(-2);
+    navigate("/app/dashboard");
     /**I may change in future */
   };
 
@@ -23,6 +25,10 @@ const CreateQuiz = () => {
   const handleNextStep = () => {
     if (!quizName) {
       toast.error("Please Provide Quiz Name");
+      return;
+    }
+    if (!quizType) {
+      toast.error("Please Provide Quiz Type Also");
       return;
     }
     if (quizName !== 2) {
@@ -64,7 +70,10 @@ const CreateQuiz = () => {
         </div>
       )}
       {step === 2 && (
-        <div>{quizType === "Q&A" && <QuestionAnsForm name={quizName} />}</div>
+        <div>
+          {quizType === "Q&A" && <QuestionAnsForm name={quizName} />}
+          {quizType === "poll" && <PollForm name={quizName} />}
+        </div>
       )}
     </div>
   );
